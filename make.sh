@@ -73,11 +73,16 @@ else
   CFLAGS="$CFLAGS -O3"
 fi
 
-LIBS=''
+if [ -z $FASTCOMMON_PREFIX ]; then
+  FASTCOMMON_PREFIX=/usr
+fi
+export FASTCOMMON_PREFIX
+
+LIBS="-L$FASTCOMMON_PREFIX/lib"
 if [ $OS_BITS -eq 64 ]; then
-  LIBS='-L/usr/lib64'
+  LIBS="$LIBS -L/usr/lib64"
 else
-  LIBS='-L/usr/lib'
+  LIBS="$LIBS -L/usr/lib"
 fi
 
 uname=$(uname)
@@ -153,6 +158,7 @@ if [ "$DEBUG_FLAG" = "1" ]; then
     STORAGE_EXTRA_OBJS="$STORAGE_EXTRA_OBJS ../common/linux_stack_trace.o"
   fi
 fi
+
 
 cd tracker
 cp Makefile.in Makefile
